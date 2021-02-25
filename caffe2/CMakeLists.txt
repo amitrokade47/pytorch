@@ -13,7 +13,7 @@ endif()
 
 # Debug messages - if you want to get a list of source files and examine
 # target information, enable the following by -DPRINT_CMAKE_DEBUG_INFO=ON.
-set(PRINT_CMAKE_DEBUG_INFO FALSE CACHE BOOL "print cmake debug information")
+set(PRINT_CMAKE_DEBUG_INFO TRUE CACHE BOOL "print cmake debug information")
 if(PRINT_CMAKE_DEBUG_INFO)
   include(../cmake/DebugHelper.cmake)
 endif()
@@ -81,6 +81,8 @@ if(INTERN_BUILD_ATEN_OPS)
   add_dependencies(aten_op_header_gen __aten_op_header_gen)
 
   # Add source, includes, and libs to lists
+  list(APPEND ATen_CPU_INCLUDE_LITE "")
+  append_filelist("ATEN_CPU_SOURCE_LIST" ATen_CPU_INCLUDE_LITE)
   list(APPEND Caffe2_CPU_SRCS ${ATen_CPU_SRCS})
   list(APPEND Caffe2_GPU_SRCS ${ATen_CUDA_SRCS})
   list(APPEND Caffe2_GPU_SRCS_W_SORT_BY_KEY ${ATen_CUDA_SRCS_W_SORT_BY_KEY})
@@ -932,8 +934,8 @@ if(USE_TBB)
   list(APPEND ATen_CPU_INCLUDE ${TBB_ROOT_DIR}/include)
   target_link_libraries(torch_cpu PUBLIC tbb)
 endif()
-
-
+  list(APPEND ATen_CPU_INCLUDE_LITE "")
+  append_filelist("ATEN_CPU_SOURCE_LIST" ATen_CPU_INCLUDE_LITE)
   target_include_directories(torch_cpu PRIVATE ${ATen_CPU_INCLUDE})
 
   target_include_directories(torch_cpu PRIVATE
